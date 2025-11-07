@@ -6,13 +6,12 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class right-panel extends Component
+class RightPanel extends Component
 {
     /**
      * Create a new component instance.
      */
-    public function __construct()
-    {
+    public function __construct()  {
         //
     }
 

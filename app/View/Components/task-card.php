@@ -6,7 +6,7 @@ use Closure;
 use Illuminate\Contracts\View\View;
 use Illuminate\View\Component;
 
-class task-card extends Component
+class taskcard extends Component
 {
     /**
      * Create a new component instance.
