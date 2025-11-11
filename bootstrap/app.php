@@ -5,6 +5,7 @@ use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
 use App\Http\Middleware\JwtMiddleware;
 
+
 return Application::configure(basePath: dirname(__DIR__))
     ->withRouting(
         web: __DIR__.'/../routes/web.php',
@@ -12,13 +13,18 @@ return Application::configure(basePath: dirname(__DIR__))
         commands: __DIR__.'/../routes/console.php',
         health: '/up',
     )
-    ->withMiddleware(function (Middleware $middleware): void {
-        //
+    ->withMiddleware(function (Middleware $middleware) {
+        // Register your custom JWT middleware
         $middleware->alias([
-            'jwt' => JwtMiddleware::class
+           // 'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
+            'jwt' => \App\Http\Middleware\JwtMiddleware::class, // Shorter alias
         ]);
-
+        
+        // Also register the package middleware if needed
+        // $middleware->alias([
+        //     'jwt.package' => \PHPOpenSourceSaver\JWTAuth\Http\Middleware\Authenticate::class,
+        // ]);
     })
-    ->withExceptions(function (Exceptions $exceptions): void {
+    ->withExceptions(Function (Exceptions $exceptions):void {
         //
     })->create();

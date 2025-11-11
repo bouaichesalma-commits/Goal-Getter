@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Facades\Auth;
+
+use Illuminate\Support\Facades\Cookie;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 
@@ -37,23 +38,35 @@ class AuthController extends Controller
         ], 201);
     }
 
-    public function login(Request $request)
-    {
-        $credentials = $request->only('email', 'password');
+public function login(Request $request)
+{
+    $credentials = $request->only('email', 'password');
 
-        try {
-            if (!$token = JWTAuth::attempt($credentials)) {
-                return response()->json(['error' => 'Invalid credentials'], 401);
-            }
-        } catch (JWTException $e) {
-            return response()->json(['error' => 'Could not create token'], 500);
+    try {
+        if (!$token = JWTAuth::attempt($credentials)) {
+            return response()->json(['error' => 'Invalid credentials'], 401);
         }
-
-        return response()->json([
-            'token' => $token,
-            'expires_in' => JWTAuth::factory()->getTTL() * 60,
-        ]);
+    } catch (JWTException $e) {
+        return response()->json(['error' => 'Could not create token'], 500);
     }
+
+    $user = JWTAuth::user();
+
+    // Set token cookie (HttpOnly, SameSite=Lax for localhost)
+    Cookie::queue(Cookie::make(
+        'token',
+        $token,
+        60,        // minutes
+        '/',       // path
+        null,      // domain
+        false,     // secure=false for localhost
+        true,      // HttpOnly
+        false,
+        'Lax'
+    ));
+
+    return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, 60, '/', null, false, true, false, 'Lax');
+}
 
     public function logout()
     {
@@ -69,7 +82,9 @@ class AuthController extends Controller
     public function getUser()
     {
         try {
-            $user = Auth::user();
+            // FIX: Use JWTAuth instead of Auth
+            $user = JWTAuth::user();
+
             if (!$user) {
                 return response()->json(['error' => 'User not found'], 404);
             }
@@ -79,17 +94,20 @@ class AuthController extends Controller
         }
     }
 
-    // public function updateUser(Request $request)
-    // {
-    //     try {
-    //         $user = User::find(Auth::id());
-    //         if (!$user) {
-    //             return response()->json(['error' => 'User not found'], 404);
-    //         }
-    //         $user->update($request->only(['name', 'email']));
-    //         return response()->json($user);
-    //     } catch (\Exception $e) {
-    //         return response()->json(['error' => 'Failed to update user'], 500);
-    //     }
-    // }
+    public function updateUser(Request $request)
+    {
+        try {
+            // FIX: Use JWTAuth instead of Auth
+            $user = JWTAuth::user();
+
+            if (!$user) {
+                return response()->json(['error' => 'User not found'], 404);
+            }
+
+            $user->update($request->only(['name', 'email']));
+            return response()->json($user);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Failed to update user'], 500);
+        }
+    }
 }

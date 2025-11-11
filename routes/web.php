@@ -1,11 +1,28 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TaskController;
 
+// Route::get('/', function () {
+    
+//     return view('dashboard');
+// });
 Route::get('/', function () {
     return view('dashboard');
-});
+})->middleware('jwt');
+
+
+Route::get('/login', function () {
+    return view('auth.login'); 
+})->name('login');
+
+
+Route::get('/register', function () {
+    return view('auth.register');  
+})->name('register');
+
+
 
 route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
 
