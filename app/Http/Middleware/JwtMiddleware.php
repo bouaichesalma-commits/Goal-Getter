@@ -11,17 +11,18 @@ class JwtMiddleware
 {
    public function handle(Request $request, Closure $next)
     {
-        $token = $request->cookie('token'); // now it works because of EncryptCookies except
+      
+        $token = $request->cookie('token'); 
 
         if (!$token) {
-            return redirect()->route('login'); // no token → login
+            return redirect()->route('login'); 
         }
 
         try {
             JWTAuth::setToken($token);
             $user = JWTAuth::authenticate();
         } catch (JWTException $e) {
-            return redirect()->route('login'); // invalid/expired
+            return redirect()->route('login'); 
         }
 
         return $next($request);

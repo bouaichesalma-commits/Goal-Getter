@@ -2,7 +2,7 @@
 
 @section('page-title', 'Dashboard')
 @section('page-subtitle', 'Welcome back')
-@php
+{{-- @php
     $tasks = [
         [
             'id' => 1,
@@ -41,12 +41,12 @@
         ],
     ];
 
-@endphp
+@endphp --}}
 
 
 
 
 
     @section('content')
-        <x-task :tasks="$tasks" />
+        <x-task  />
     @endsection

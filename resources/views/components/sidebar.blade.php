@@ -7,24 +7,29 @@
     <div class="profile">
         <div class="avatar" id="userAvatar"></div>
         <div class="meta">
-            <div class="name " id="name"> Salma</div>
+            <div class="name " id="name"> </div>
             <div class="sub">Your productivity</div>
         </div>
     </div>
 
     <nav class="nav">
-        <a class="" href="">
+        <a class="{{ request()->routeIs('home') ? 'active' : '' }}" href="/">
             <span class="icon"> <i class="fa-solid fa-grip" style="color: var(--accent); "></i></span> Dashboard
         </a>
-        <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="">
-            <span class="icon"><i class="fa-solid fa-list-check" style="color: var(--accent);"></i></span> Pending
+        </a>
+        <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="{{ route('tasks.index')  }}">
+            <span class="icon"><i class="fa-solid fa-list-check" style="color: var(--accent);"></i></span> All
             Tasks
         </a>
+        <a class="{{ request()->routeIs('tasks.pending') ? 'active' : '' }}" href="{{ route('tasks.pending')  }}">
+            <span class="icon"><i class="fa-solid fa-list-check" style="color: var(--accent);"></i></span> Pending
+            Tasks
 
-        <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="">
-            <span class="icon"><i class="fa-regular fa-circle-check" style="color: var(--accent);"></i></span>
-            Completed Tasks
-        </a>
+
+            <a class="{{ request()->routeIs('tasks.completed') ? 'active' : '' }}" href="{{ route('tasks.completed')  }}">
+                <span class="icon"><i class="fa-regular fa-circle-check" style="color: var(--accent);"></i></span>
+                Completed Tasks
+            </a>
     </nav>
 
     <div class="pro-tip">
@@ -50,7 +55,7 @@
                 const res = response;
 
                 console.log('Status:', res.status, 'OK:', res.ok);
-                 
+
 
                 if (res.status === 401 || res.status === 404) {
                     //  window.location.href = '/login';

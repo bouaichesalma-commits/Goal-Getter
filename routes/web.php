@@ -1,16 +1,19 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\TaskController;
+use App\Models\Task;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 // Route::get('/', function () {
     
 //     return view('dashboard');
 // });
 Route::get('/', function () {
-    return view('dashboard');
-})->middleware('jwt');
+    $user = JWTAuth::parseToken()->authenticate();
+    $tasks = Task::where('user_id', $user->id)->paginate(2);
+    return view('dashboard', ['tasks' => $tasks]);
+})->name('home')->middleware('jwt');
 
 
 Route::get('/login', function () {
@@ -22,12 +25,16 @@ Route::get('/register', function () {
     return view('auth.register');  
 })->name('register');
 
+Route::middleware(['jwt'])->group(function () {
 
+route::get('/tasks', [TaskController::class, 'index'])->name('tasks.index');
+route::get('/tasks/pending', [TaskController::class, 'pending'])->name('tasks.pending');
+route::get('/tasks/completed', [TaskController::class, 'completed'])->name('tasks.completed');
 
-route::get('/tasks', [TaskController::class, 'index'])->name('task.index');
+Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
 
-Route::get('/task/create', [TaskController::class, 'create'])->name('task.create');
+Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
+Route::post('/tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.update');
+Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
-Route::post('/tasks', [TaskController::class, 'store'])->name('task.store');
-Route::post('/task/{task}/update', [TaskController::class, 'update'])->name('task.update');
-Route::delete('/task/{task}', [TaskController::class, 'destroy'])->name('task.destroy');
+});

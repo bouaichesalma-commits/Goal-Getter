@@ -2,7 +2,7 @@
   <div class="card">
     <h4 style="margin:0 0 8px 0;">Task Statistics</h4>
     <div class="stat-grid">
-      <div class="stat-item"><div class="num">{{ $tasksCount ?? 0 }}</div><div class="lbl">Total</div></div>
+      <div class="stat-item"><div class="num">{{ $tasksCount  }}</div><div class="lbl">Total</div></div>
       <div class="stat-item"><div class="num">{{ $completedCount ?? 0 }}</div><div class="lbl">Completed</div></div>
       <div class="stat-item"><div class="num">{{ $pendingCount ?? 0 }}</div><div class="lbl">Pending</div></div>
       <div class="stat-item"><div class="num">{{ $completionRate ?? '0%' }}</div><div class="lbl">Completion</div></div>
@@ -31,7 +31,24 @@
         </div>
       @endforeach
     @else
-      <div class="recent-item">No recent activity</div>
+      {{-- <div class="recent-item">No recent activity</div> --}}
+
+      ️@if(isset($tasks) && $tasks->count())
+
+            @foreach($tasks as $task)
+                @if($task->is_completed == 1  ) 
+                  <div class="recent-item">
+                    <div>
+                      <div style="font-weight:700;">{{ $task->title }}</div>
+                      <div style="font-size:12px;color:var(--muted)">{{ $task->created_at->format('M d, Y') }}</div>
+                    </div>
+                    <div style="color:var(--success); font-weight:700; font-size:13px; padding:6px 10px; border-radius:999px; background:#ecfff0;">Completed</div>
+
+                  </div>
+                @endif
+            @endforeach
+      @endif
+
     @endif
   </div>
 </aside>

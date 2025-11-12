@@ -12,6 +12,6 @@
   </div>
 
   <div class="header-action">
-    <a class="btn btn-add" id="addTaskBtn" href="{{route('task.create')}}"><i class="fa-solid fa-plus"></i> Add New</a>
+    <a class="btn btn-add" id="addTaskBtn" href="{{route('tasks.create')}}"><i class="fa-solid fa-plus"></i> New Task</a>
   </div>
 </header>

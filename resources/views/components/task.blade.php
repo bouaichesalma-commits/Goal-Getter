@@ -23,16 +23,10 @@
 <div class="task-overview-component">
   
   <section class="summary-cards" aria-label="Task summary">
-    <div class="card total-tasks" role="group" aria-label="Total tasks">
-      <div class="card-icon"><i class="fa-solid fa-home"></i></div>
-      <div class="card-body">
-        <div class="card-number">{{ $total }}</div>
-        <div class="card-label">Total Tasks</div>
-      </div>
-    </div>
+
 
     <div class="card low-priority" role="group" aria-label="Low priority tasks">
-      <div class="card-icon"><i class="fa-solid fa-fire"></i></div>
+      <div class="card-icon"><i class="fa-solid fa-fire" style="color: rgb(28, 194, 240)"></i></div>
       <div class="card-body">
         <div class="card-number">{{ $low }}</div>
         <div class="card-label">Low Priority</div>
@@ -40,7 +34,7 @@
     </div>
 
     <div class="card medium-priority" role="group" aria-label="Medium priority tasks">
-      <div class="card-icon"><i class="fa-solid fa-fire"></i></div>
+      <div class="card-icon"><i class="fa-solid fa-fire" style="color: rgb(240, 155, 28)"></i></div>
       <div class="card-body">
         <div class="card-number">{{ $medium }}</div>
         <div class="card-label">Medium Priority</div>
@@ -48,7 +42,7 @@
     </div>
 
     <div class="card high-priority" role="group" aria-label="High priority tasks">
-      <div class="card-icon"><i class="fa-solid fa-fire"></i></div>
+      <div class="card-icon"><i class="fa-solid fa-fire" style="color: rgb(240, 28, 28)"></i></div>
       <div class="card-body">
         <div class="card-number">{{ $high }}</div>
         <div class="card-label">High Priority</div>

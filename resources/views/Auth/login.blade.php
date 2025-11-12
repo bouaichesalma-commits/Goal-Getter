@@ -119,9 +119,6 @@
 
                     if (res.ok) {
 
-                        localStorage.setItem('jwt_token', data.token);
-                        localStorage.setItem('user_id', data.user.id);
-                        alert('Good' || 'Login successful');
                         window.location.href = '/';
                     } else {
                         alert(data.error || 'Login failed');

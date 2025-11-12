@@ -119,10 +119,9 @@
                 console.log(data);
 
                 if (res.ok) {
-                    // لو الباكند يرجع token في body
-                    localStorage.setItem('jwt_token', data.token);
-                    alert('Registered successfully!');
-                    window.location.href = '/login'; // بعد التسجيل
+
+                
+                    window.location.href = '/login'; 
                 } else {
                     alert(data.error || 'Registration failed');
                 }

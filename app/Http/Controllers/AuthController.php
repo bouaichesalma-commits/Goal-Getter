@@ -53,19 +53,19 @@ public function login(Request $request)
     $user = JWTAuth::user();
 
     // Set token cookie (HttpOnly, SameSite=Lax for localhost)
-    Cookie::queue(Cookie::make(
+    Cookie::queue(Cookie::forever(
         'token',
         $token,
-        60,        // minutes
-        '/',       // path
-        null,      // domain
-        false,     // secure=false for localhost
-        true,      // HttpOnly
+        0,        
+        '/',       
+        null,     
+        false,     
+        true,     
         false,
         'Lax'
     ));
 
-    return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, 60, '/', null, false, true, false, 'Lax');
+    return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, 0, '/', null, false, true, false, 'Lax');
 }
 
     public function logout()
@@ -81,6 +81,7 @@ public function login(Request $request)
 
     public function getUser()
     {
+
         try {
             // FIX: Use JWTAuth instead of Auth
             $user = JWTAuth::user();

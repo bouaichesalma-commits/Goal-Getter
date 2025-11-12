@@ -2,24 +2,46 @@
 
 namespace App\View\Components;
 
-use Closure;
-use Illuminate\Contracts\View\View;
+
 use Illuminate\View\Component;
+use App\Models\Task;
+use Illuminate\Support\Facades\Auth;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class RightPanel extends Component
 {
-    /**
-     * Create a new component instance.
-     */
-    public function __construct()  {
-        //
+     public int $tasksCount = 0;
+    public int $completedCount = 0;
+    public int $pendingCount = 0;
+    public int $completionPercent = 0;
+    public string $completionRate = '0%';
+    public $recent; // Collection
+    public $tasks;  // LengthAwarePaginator
+
+    public function __construct()
+    {
+        $user = JWTAuth::user();
+        
+
+        $this->tasksCount = Task::where('user_id', $user->id)->count();
+        $this->completedCount = Task::where('user_id', $user->id)
+                                    ->where('is_completed', 1)->count();
+        $this->pendingCount = $this->tasksCount - $this->completedCount;
+        $this->completionPercent = $this->tasksCount ? round($this->completedCount * 100 / $this->tasksCount) : 0;
+        $this->completionRate = $this->completionPercent . '%';
+        $this->recent = Task::where('user_id', $user->id)->latest()->take(5)->get();
     }
 
-    /**
-     * Get the view / contents that represent the component.
-     */
-    public function render(): View|Closure|string
+    public function render()
     {
-        return view('components.right-panel');
+      
+        return view('components.right-panel', [
+            'tasksCount' => $this->tasksCount,
+            'completedCount' => $this->completedCount,
+            'pendingCount' => $this->pendingCount,
+            'completionPercent' => $this->completionPercent,
+            'completionRate' => $this->completionRate,
+            'recent' => $this->recent,
+        ]);
     }
 }

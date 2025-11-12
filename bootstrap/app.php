@@ -3,7 +3,7 @@
 use Illuminate\Foundation\Application;
 use Illuminate\Foundation\Configuration\Exceptions;
 use Illuminate\Foundation\Configuration\Middleware;
-use App\Http\Middleware\JwtMiddleware;
+
 
 
 return Application::configure(basePath: dirname(__DIR__))
@@ -16,7 +16,7 @@ return Application::configure(basePath: dirname(__DIR__))
     ->withMiddleware(function (Middleware $middleware) {
         // Register your custom JWT middleware
         $middleware->alias([
-           // 'jwt.auth' => \App\Http\Middleware\JwtMiddleware::class,
+         
             'jwt' => \App\Http\Middleware\JwtMiddleware::class, // Shorter alias
         ]);
         
