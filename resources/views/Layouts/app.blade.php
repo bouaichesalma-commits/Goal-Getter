@@ -27,14 +27,14 @@
 
 
                 @if (session('success'))
-                    <x-alert type="success">
-                        {{ session('success') }}
-                    </x-alert>
+                <x-alert type="success">
+                    {{ session('success') }}
+                </x-alert>
                 @endif
                 @if (session('error'))
-                    <x-alert type="danger">
-                        {{ session('error') }}
-                    </x-alert>
+                <x-alert type="danger">
+                    {{ session('error') }}
+                </x-alert>
                 @endif
 
 
@@ -50,10 +50,43 @@
 
     @stack('scripts')
 
+    <script>
+        document.querySelectorAll('.task-checkbox').forEach(ch => {
+            ch.addEventListener('change', function() {
 
+                let taskId = this.dataset.id;
 
+                fetch(`/tasks/${taskId}/toggle`, {
+                        method: "PATCH",
+                        headers: {
+                            "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                            "Accept": "application/json",
+                            "Content-Type": "application/json"
+                        }
+                    })
+                    .then(res => res.json())
+                    .then(data => {
+                        if (data.success) {
+                            console.log(window.location.pathname);
+                            let article = this.closest('.task-card');
+                            
+                            if (data.is_completed) {
+                                article.classList.add('completed');
+                            } else {
+                                article.classList.remove('completed');
+                            }
+                            if (window.location.pathname === '/tasks/pending' && data.is_completed) {
+                                article.remove();
+                            }
+                            if (window.location.pathname === '/tasks/completed' && !data.is_completed) {
+                                article.remove();
+                            }
+                        }
 
-
+                    });
+            });
+        });
+    </script>
 
 
 </body>

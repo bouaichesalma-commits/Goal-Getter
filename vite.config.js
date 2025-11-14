@@ -7,9 +7,9 @@ export default defineConfig({
         laravel([
             "resources/css/app.css",
             "resources/css/style.css",
-             "resources/css/auth.css",
+            "resources/css/auth.css",
             "resources/js/app.js",
-            "resources/js/script.js"
+            "resources/js/script.js",
         ]),
         tailwindcss(),
     ],

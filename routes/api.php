@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\TaskController;
 
 Route::get('/', function () {
    return response()->json(['message' => 'Hello world!']);
@@ -15,3 +16,4 @@ Route::middleware('jwt')->group(function () {
  //   Route::put('/user', [AuthController::class, 'updateUser']);
     Route::post('/logout', [AuthController::class, 'logout']);
 });
+

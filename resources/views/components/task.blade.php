@@ -1,3 +1,4 @@
+
 @props([
   'tasks' => null,
   'total' => null,
@@ -7,8 +8,8 @@
 ])
 
 @php
-  if ($tasks && is_iterable($tasks)) {
-      $total =1;
+$total =1;
+if ($tasks && is_iterable($tasks)) {
       $low = 1;
       $medium =1;
       $high =3 ;
@@ -19,6 +20,8 @@
       $high = $high ?? 0;
   }
 @endphp
+
+
 
 <div class="task-overview-component">
   

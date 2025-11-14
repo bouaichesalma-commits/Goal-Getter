@@ -9,3 +9,18 @@
     --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
         'Segoe UI Symbol', 'Noto Color Emoji';
 }
+
+.completed {
+    background-color: #d4edda;
+    text-decoration: line-through;
+    text-decoration: line-through;
+    opacity: 0.6;
+}
+
+.pending {
+    background-color: #fff3cd;
+}
+
+.hidden {
+    display: none;
+}
