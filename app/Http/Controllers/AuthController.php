@@ -105,7 +105,7 @@ public function login(Request $request)
                 return response()->json(['error' => 'User not found'], 404);
             }
 
-            $user->update($request->only(['name', 'email']));
+            $user->update(request()->only(['name', 'email']));
             return response()->json($user);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update user'], 500);
