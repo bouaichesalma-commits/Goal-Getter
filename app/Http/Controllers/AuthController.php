@@ -38,35 +38,36 @@ class AuthController extends Controller
         ], 201);
     }
 
-public function login(Request $request)
-{
-    $credentials = $request->only('email', 'password');
+    public function login(Request $request)
+    {
+        $credentials = $request->only('email', 'password');
 
-    try {
-        if (!$token = JWTAuth::attempt($credentials)) {
-            return response()->json(['error' => 'Invalid credentials'], 401);
+        try {
+            if (!$token = JWTAuth::attempt($credentials)) {
+                return response()->json(['error' => 'Invalid credentials'], 401);
+            }
+        } catch (JWTException $e) {
+            return response()->json(['error' => 'Could not create token'], 500);
         }
-    } catch (JWTException $e) {
-        return response()->json(['error' => 'Could not create token'], 500);
+
+        $user = JWTAuth::user();
+
+        // Set token cookie (HttpOnly, SameSite=Lax for localhost)
+        $time = 60 * 60;
+        Cookie::queue(Cookie::forever(
+            'token',
+            $token,
+            $time,
+            '/',
+            null,
+            false,
+            true,
+            false,
+            'Lax'
+        ));
+
+        return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, $time, '/', null, false, true, false, 'Lax');
     }
-
-    $user = JWTAuth::user();
-
-    // Set token cookie (HttpOnly, SameSite=Lax for localhost)
-    Cookie::queue(Cookie::forever(
-        'token',
-        $token,
-        0,        
-        '/',       
-        null,     
-        false,     
-        true,     
-        false,
-        'Lax'
-    ));
-
-    return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, 0, '/', null, false, true, false, 'Lax');
-}
 
     public function logout()
     {

@@ -14,9 +14,6 @@ class TaskController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
-
-
-      //  $tasks = Task::where('user_id', $user->id)->pagin;
     
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -47,6 +44,12 @@ class TaskController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function edit($id)
+    {
+        $task = Task::findOrFail($id);
+
+        return view('tasks.edit', compact('task')); 
+    }
 
     public function update(Request $request, Task $task)
     {
@@ -65,11 +68,11 @@ class TaskController extends Controller
             $task->priority = $request->input('priority', $task->priority); // Add priority update
             $task->save();
 
-            return response()->json(['message' => 'Task updated successfully', 'task' => $task], 200);
+              return redirect()->route('tasks.index')->with('success', 'Task updated successfully');
 
         } catch (Exception $e) {
             Log::error('Error updating task: ' . $e->getMessage());
-            return response()->json(['error' => 'Could not update task'], 500);
+             return redirect()->route('tasks.index')->with('error', 'Could Modify task');
         }
     }
 
@@ -116,4 +119,7 @@ class TaskController extends Controller
 
         return view('tasks.completed', ['tasks' => $tasks]);
     }   
+
+
+
 }
