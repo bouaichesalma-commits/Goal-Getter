@@ -29,7 +29,7 @@ class RightPanel extends Component
         $this->pendingCount = $this->tasksCount - $this->completedCount;
         $this->completionPercent = $this->tasksCount ? round($this->completedCount * 100 / $this->tasksCount) : 0;
         $this->completionRate = $this->completionPercent . '%';
-        $this->recent = Task::where('user_id', $user->id)->latest()->take(5)->get();
+        $this->recent = Task::where('user_id', $user->id)->latest()->take(4)->get();
     }
 
     public function render()

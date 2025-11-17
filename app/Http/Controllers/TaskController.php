@@ -15,7 +15,7 @@ class TaskController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
-    
+
         return view('tasks.index', ['tasks' => $tasks]);
     }
 
@@ -48,7 +48,7 @@ class TaskController extends Controller
     {
         $task = Task::findOrFail($id);
 
-        return view('tasks.edit', compact('task')); 
+        return view('tasks.edit', compact('task'));
     }
 
     public function update(Request $request, Task $task)
@@ -68,13 +68,10 @@ class TaskController extends Controller
             $task->priority = $request->input('priority', $task->priority); // Add priority update
             $task->save();
             return redirect()->route('tasks.index')->with('success', 'task updated successfuly');
-
-          
-
         } catch (Exception $e) {
             Log::error('Error updating task: ' . $e->getMessage());
-            
-             return redirect()->route('tasks.index')->with('error', 'Could Modify task');
+
+            return redirect()->route('tasks.index')->with('error', 'Could Modify task');
         }
     }
 
@@ -117,10 +114,10 @@ class TaskController extends Controller
             ->paginate(4);
 
         return view('tasks.completed', ['tasks' => $tasks]);
-    }   
+    }
 
 
-      public function toggle(Request $request, $id)
+    public function toggle(Request $request, $id)
     {
         $user = JWTAuth::parseToken()->authenticate();
 
@@ -135,5 +132,53 @@ class TaskController extends Controller
             'success' => true,
             'is_completed' => $task->is_completed
         ]);
+    }
+
+
+    // Enhanced filter method with validation
+    public function filter(Request $request)
+    {
+
+        try {
+            $validated = $request->validate([
+                'filter' => 'sometimes|string|in:all,today,week,high,medium,low'
+            ]);
+
+            $filter = $validated['filter'] ?? 'all';
+            $query = Task::query();
+
+            // Apply filters (same switch case as above)
+            switch ($filter) {
+                case 'today':
+                    $query->whereDate('created_at', today());
+                    break;
+                case 'week':
+                    $query->whereBetween('created_at', [now()->startOfDay(), now()->addDays(7)->endOfDay()]);
+                    break;
+                case 'high':
+                    $query->where('priority', 'high');
+                    break;
+                case 'medium':
+                    $query->where('priority', 'medium');
+                    break;
+                case 'low':
+                    $query->where('priority', 'low');
+                    break;
+            }
+
+            $tasks = $query->paginate(4);
+
+            return response()->json([
+                
+                'tasks' => $tasks
+                
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error filtering tasks',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }

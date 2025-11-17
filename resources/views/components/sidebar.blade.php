@@ -17,23 +17,30 @@
             <span class="icon"> <i class="fa-solid fa-grip" style="color: var(--accent); "></i></span> Dashboard
         </a>
         </a>
-        <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="{{ route('tasks.index')  }}">
+        <a class="{{ request()->routeIs('tasks.index') ? 'active' : '' }}" href="{{ route('tasks.index') }}">
             <span class="icon"><i class="fa-solid fa-list-check" style="color: var(--accent);"></i></span> All
             Tasks
         </a>
-        <a class="{{ request()->routeIs('tasks.pending') ? 'active' : '' }}" href="{{ route('tasks.pending')  }}">
+        <a class="{{ request()->routeIs('tasks.pending') ? 'active' : '' }}" href="{{ route('tasks.pending') }}">
             <span class="icon"><i class="fa-solid fa-list-check" style="color: var(--accent);"></i></span> Pending
             Tasks
 
 
-            <a class="{{ request()->routeIs('tasks.completed') ? 'active' : '' }}" href="{{ route('tasks.completed')  }}">
+            <a class="{{ request()->routeIs('tasks.completed') ? 'active' : '' }}"
+                href="{{ route('tasks.completed') }}">
                 <span class="icon"><i class="fa-regular fa-circle-check" style="color: var(--accent);"></i></span>
                 Completed Tasks
             </a>
     </nav>
 
     <div class="pro-tip">
-        <div class="title">Pro Tip</div>
+        <button id="logout-btn" type="button" class="logout-btn title"
+            style="    color: blueviolet;
+    font-size: 14px;">
+            <i class="fas fa-sign-out-alt"></i>
+            Logout
+        </button>
+        <br>
         Use keyboard shortcuts and quick add to speed up.
     </div>
 </aside>
@@ -88,6 +95,41 @@
                 document.getElementById('name').textContent = 'Guest User';
                 // window.location.href = '/login';
             }
+        });
+
+
+
+
+
+
+
+
+
+
+
+
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+
+            fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        //  'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+                        'Content-Type': 'application/json',
+                    },
+
+                })
+                .then(response => {
+                    if (response.ok) {
+                        // Redirect to login page or home page after logout
+                        window.location.href = '/login';
+                    } else {
+                        throw new Error('Logout failed');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
         });
     </script>
 @endpush

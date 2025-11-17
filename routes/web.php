@@ -40,4 +40,7 @@ Route::middleware(['jwt'])->group(function () {
     Route::put('/tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.update');
 
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
+
+
+    
 });

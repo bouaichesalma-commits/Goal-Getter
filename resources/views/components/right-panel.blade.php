@@ -27,7 +27,13 @@
             <div style="font-weight:700;">{{ $r->title }}</div>
             <div style="font-size:12px;color:var(--muted)">{{ $r->created_at->format('M d, Y') }}</div>
           </div>
-          <div style="color:var(--success); font-weight:700; font-size:13px; padding:6px 10px; border-radius:999px; background:#ecfff0;">{{ $r->status === 'completed' ? 'Done' : 'Pending' }}</div>
+          @if($r->is_completed == 1 )
+          <div style="color:var(--success); font-weight:700; font-size:13px; padding:6px 10px; border-radius:999px; background:#a4ffb7;">Done</div>
+          @else
+
+            <div style="color:var(--error); font-weight:700; font-size:13px; padding:6px 10px; border-radius:999px; background:#ef7e4a;" >Pending</div>
+
+          @endif
         </div>
       @endforeach
     @else

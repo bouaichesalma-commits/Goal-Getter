@@ -52,12 +52,10 @@
                     @include('components.task-card', ['task' => $task])
             @endforeach
         @endif
-
                 
       </div>
       <div>
-        {{ $tasks->links() }}
-
+         {{ $tasks->links() }}
       </div>
 
         <div class="add-new-placeholder" role="button" tabindex="0" aria-label="Add new task">

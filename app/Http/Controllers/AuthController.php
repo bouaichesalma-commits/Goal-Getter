@@ -53,7 +53,7 @@ class AuthController extends Controller
         $user = JWTAuth::user();
 
         // Set token cookie (HttpOnly, SameSite=Lax for localhost)
-        $time = 60 * 60;
+        $time = 60 * 60 * 5;
         Cookie::queue(Cookie::forever(
             'token',
             $token,
