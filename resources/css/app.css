@@ -1,5 +1,10 @@
 @import 'tailwindcss';
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
 @source '../**/*.blade.php';
@@ -11,16 +16,12 @@
 }
 
 .completed {
-    background-color: #d4edda;
-    text-decoration: line-through;
+    background-color: #aaffad4d;
     text-decoration: line-through;
     opacity: 0.6;
 }
 
 .pending {
-    background-color: #fff3cd;
+    background-color: #ffc1aa4d;
 }
 
-.hidden {
-    display: none;
-}

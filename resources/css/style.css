@@ -333,7 +333,7 @@ a {
     gap: 18px;
     padding: 18px;
     border-radius: 12px;
-    background: #fff;
+    /* background: #fff; */
     border: 1px solid rgba(0, 0, 0, 0.03);
     box-shadow: 0 2px 8px rgba(12, 20, 40, 0.03);
     min-height: 72px;
@@ -548,3 +548,7 @@ button {
     outline-offset: 2px;
     border-radius: 8px;
 }
+
+
+
+

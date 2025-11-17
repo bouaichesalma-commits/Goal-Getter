@@ -14,7 +14,7 @@
     @vite(['resources/css/app.css', 'resources/css/style.css', 'resources/js/app.js', 'resources/js/script.js'])
 
 
-    @stack('head')
+    {{-- @stack('head') --}}
 </head>
 
 <body>
@@ -75,8 +75,10 @@
                             
                             if (data.is_completed) {
                                 article.classList.add('completed');
+                                 article.classList.remove('pending');
                             } else {
                                 article.classList.remove('completed');
+                                article.classList.add('pending') ;
                             }
                             if (window.location.pathname === '/tasks/pending' && data.is_completed) {
                                 article.remove();

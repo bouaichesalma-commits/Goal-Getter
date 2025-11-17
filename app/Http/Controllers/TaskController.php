@@ -15,9 +15,6 @@ class TaskController extends Controller
     {
         $user = JWTAuth::parseToken()->authenticate();
         $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
-
-
-      //  $tasks = Task::where('user_id', $user->id)->pagin;
     
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -121,4 +118,22 @@ class TaskController extends Controller
 
         return view('tasks.completed', ['tasks' => $tasks]);
     }   
+
+
+      public function toggle(Request $request, $id)
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $task = Task::where('id', $id)
+            ->where('user_id', $user->id)
+            ->firstOrFail();
+
+        $task->is_completed = !$task->is_completed;
+        $task->save();
+
+        return response()->json([
+            'success' => true,
+            'is_completed' => $task->is_completed
+        ]);
+    }
 }

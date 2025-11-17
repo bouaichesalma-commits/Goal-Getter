@@ -52,6 +52,12 @@
                     @include('components.task-card', ['task' => $task])
             @endforeach
         @endif
+
+                
+      </div>
+      <div>
+        {{ $tasks->links() }}
+
       </div>
 
         <div class="add-new-placeholder" role="button" tabindex="0" aria-label="Add new task">
@@ -60,7 +66,7 @@
         </div>
     </section>
 
-    @push('scripts')
+  @push('scripts')
         <script>
             document.addEventListener("DOMContentLoaded", () => {
                 const filterButtons = document.querySelectorAll(".filter-pill");

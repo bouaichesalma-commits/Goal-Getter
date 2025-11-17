@@ -24,7 +24,7 @@ class task extends Component
     {
         
          $user = JWTAuth::user();
-        $this->tasks = TaskModel::where('user_id', $user->id)->paginate(4);
+        $this->tasks = TaskModel::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
         $this->total = TaskModel::where('user_id', $user->id)->count();
         $this->low = TaskModel::where('user_id', $user->id)->where('priority', 'low')->count();
         $this->medium = TaskModel::where('user_id', $user->id)->where('priority', 'medium')->count();
