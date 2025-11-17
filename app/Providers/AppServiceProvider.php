@@ -6,6 +6,8 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Support\Facades\View;
 use Tymon\JWTAuth\Facades\JWTAuth;
 use App\Models\Task;
+use Illuminate\Support\Facades\Blade;
+use App\View\Components\TaskComponent;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -22,11 +24,6 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
-    //         View::composer('*', function ($view) {
-    //     if ($user = JWTAuth::parseToken()->authenticate()) {
-    //         $tasks = Task::where('user_id', $user->id)->paginate(2);
-    //         $view->with('tasks', $tasks);
-    //     }
-    // });
+        
     }
 }

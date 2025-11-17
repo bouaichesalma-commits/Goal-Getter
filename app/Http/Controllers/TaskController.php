@@ -17,8 +17,8 @@ class TaskController extends Controller
         $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
 
 
-        //  $tasks = Task::where('user_id', $user->id)->pagin;
-
+      //  $tasks = Task::where('user_id', $user->id)->pagin;
+    
         return view('tasks.index', ['tasks' => $tasks]);
     }
 
@@ -47,6 +47,12 @@ class TaskController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    public function edit($id)
+    {
+        $task = Task::findOrFail($id);
+
+        return view('tasks.edit', compact('task')); 
+    }
 
     public function update(Request $request, Task $task)
     {
@@ -64,11 +70,14 @@ class TaskController extends Controller
             $task->is_completed = $request->input('is_completed', $task->is_completed);
             $task->priority = $request->input('priority', $task->priority); // Add priority update
             $task->save();
+            return redirect()->route('tasks.index')->with('success', 'task updated successfuly');
 
-            return response()->json(['message' => 'Task updated successfully', 'task' => $task], 200);
+          
+
         } catch (Exception $e) {
             Log::error('Error updating task: ' . $e->getMessage());
-            return response()->json(['error' => 'Could not update task'], 500);
+            
+             return redirect()->route('tasks.index')->with('error', 'Could Modify task');
         }
     }
 
@@ -111,22 +120,5 @@ class TaskController extends Controller
             ->paginate(4);
 
         return view('tasks.completed', ['tasks' => $tasks]);
-    }
-
-    public function toggle(Request $request, $id)
-    {
-        $user = JWTAuth::parseToken()->authenticate();
-
-        $task = Task::where('id', $id)
-            ->where('user_id', $user->id)
-            ->firstOrFail();
-
-        $task->is_completed = !$task->is_completed;
-        $task->save();
-
-        return response()->json([
-            'success' => true,
-            'is_completed' => $task->is_completed
-        ]);
-    }
+    }   
 }

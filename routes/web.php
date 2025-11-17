@@ -34,9 +34,11 @@ route::get('/tasks/completed', [TaskController::class, 'completed'])->name('task
 Route::patch('/tasks/{task}/toggle', [TaskController::class, 'toggle'])->name('tasks.toggle');
 
 Route::get('/tasks/create', [TaskController::class, 'create'])->name('tasks.create');
-
 Route::post('/tasks', [TaskController::class, 'store'])->name('tasks.store');
-Route::post('/tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.update');   
+
+Route::get('/tasks/{task}/edit', [TaskController::class, 'edit'])->name('tasks.edit');
+Route::put('/tasks/{task}/update', [TaskController::class, 'update'])->name('tasks.update');
+
 Route::delete('/tasks/{task}', [TaskController::class, 'destroy'])->name('tasks.destroy');
 
 });
