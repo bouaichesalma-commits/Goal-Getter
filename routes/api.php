@@ -31,13 +31,18 @@ Route::prefix('Tasks')->group(function () {
 
       Route::get('/', 'indexApi');
 
-      Route::post('/add', ' storeApi');
+      Route::post('/add', 'storeApi');
 
-      Route::put('/update/{id}', 'updateApi');
+      Route::put('/update/{task}', 'updateApi');
 
-      Route::delete('/delete/{id}', 'destroyApi');
+      Route::delete('/delete/{task}', 'destroyApi');
 
-      
+      Route::get('/pending', 'pendingApi');
+
+      Route::get('/completed', 'completedApi');
+
+      Route::get('/filter','filterApi') ;
+
    });
 
 });

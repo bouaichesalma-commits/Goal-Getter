@@ -192,9 +192,10 @@ class TaskController extends Controller
     public function indexApi()
     {
         $user = JWTAuth::parseToken()->authenticate();
-        $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
+        $tasks = Task::where('user_id', $user->id)->get();
 
-        return response()->json(['tasks' => $tasks]);
+
+        return response()->json(['Tasks' => $tasks, 'user' => $user], 200);
     }
 
     public function storeApi(Request $request)
@@ -237,6 +238,7 @@ class TaskController extends Controller
         try {
             $user = JWTAuth::parseToken()->authenticate();
 
+
             if ($task->user_id !== $user->id) {
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
@@ -270,7 +272,7 @@ class TaskController extends Controller
     }
 
 
-    // DELETE /api/tasks/{task}
+
     public function destroyApi(Task $task)
     {
         try {
@@ -297,7 +299,7 @@ class TaskController extends Controller
 
         $tasks = Task::where('user_id', $user->id)
             ->where('is_completed', false)
-            ->orderBy('created_at', 'desc');
+            ->orderBy('created_at', 'desc')->get();
 
         return response()->json(['tasks' => $tasks], 200);
     }
@@ -309,32 +311,63 @@ class TaskController extends Controller
 
         $tasks = Task::where('user_id', $user->id)
             ->where('is_completed', true)
-            ->orderBy('created_at', 'desc');
+            ->get();
 
         return response()->json(['tasks' => $tasks], 200);
     }
 
-    // POST /api/tasks/{id}/toggle
-    public function toggleApi($id)
+
+
+
+    // Enhanced filter method with validation
+    public function filterApi(Request $request)
     {
-        // try {
-        //     $user = JWTAuth::parseToken()->authenticate();
 
-        //     $task = Task::where('id', $id)
-        //         ->where('user_id', $user->id)
-        //         ->firstOrFail();
+        try {
 
-        //     $task->is_completed = !$task->is_completed;
-        //     $task->save();
 
-        //     return response()->json([
-        //         'success' => true,
-        //         'is_completed' => $task->is_completed,
-        //         'task' => $task
-        //     ], 200);
-        // } catch (Exception $e) {
-        //     Log::error('Error toggling task: ' . $e->getMessage());
-        //     return response()->json(['error' => 'Could not toggle task'], 500);
-        // }
+            $user = JWTAuth::parseToken()->authenticate();
+
+
+            $validated = $request->validate([
+                'filter' => 'sometimes|string|in:all,today,week,high,medium,low'
+            ]);
+
+            $filter = $validated['filter'] ?? 'all';
+            $query = Task::query()->where('user_id',$user->id);
+
+            // Apply filters (same switch case as above)
+            switch ($filter) {
+                case 'today':
+                    $query->whereDate('created_at', today());
+                    break;
+                case 'week':
+                    $query->whereBetween('created_at', [now()->startOfDay(), now()->addDays(7)->endOfDay()]);
+                    break;
+                case 'high':
+                    $query->where('priority', 'high');
+                    break;
+                case 'medium':
+                    $query->where('priority', 'medium');
+                    break;
+                case 'low':
+                    $query->where('priority', 'low');
+                    break;
+            }
+
+            $tasks = $query->get();
+
+            return response()->json([
+                'filter' => $filter,
+                'tasks' => $tasks
+
+            ]);
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Error filtering tasks',
+                'error' => $e->getMessage()
+            ], 500);
+        }
     }
 }
