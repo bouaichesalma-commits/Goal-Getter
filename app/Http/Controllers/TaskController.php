@@ -342,7 +342,7 @@ class TaskController extends Controller
                     $query->whereDate('created_at', today());
                     break;
                 case 'week':
-                    $query->whereBetween('created_at', [now()->startOfDay(), now()->addDays(7)->endOfDay()]);
+                    $query->whereBetween('created_at', [now()->subDays(7)->startOfDay(),  now()->endOfDay()]);
                     break;
                 case 'high':
                     $query->where('priority', 'high');
@@ -357,9 +357,12 @@ class TaskController extends Controller
 
             $tasks = $query->get();
 
+
+
             return response()->json([
                 'filter' => $filter,
-                'tasks' => $tasks
+                'tasks' => $tasks 
+    
 
             ]);
         } catch (\Exception $e) {

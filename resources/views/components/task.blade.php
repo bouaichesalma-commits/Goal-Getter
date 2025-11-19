@@ -57,7 +57,7 @@
       <div>
          {{ $tasks->links() }}
       </div>
-
+        
         <div class="add-new-placeholder" role="button" tabindex="0" aria-label="Add new task">
             <i class="fa-solid fa-plus"></i>
             <span>Add New Task</span>
