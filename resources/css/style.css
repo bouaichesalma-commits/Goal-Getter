@@ -159,13 +159,12 @@ a {
 .main {
     display: flex;
     flex-direction: column;
-    gap: 18px;
+    gap: 0px;
 }
 
 /* header area inside content */
 .content {
     background: transparent;
-    padding: 6px 0;
 } /* your container */
 .app-header {
     display: flex;
@@ -222,7 +221,7 @@ a {
 .summary-cards .card {
     background: var(--card-bg);
     border-radius: var(--radius-lg);
-    padding: 16px;
+    padding: 1px 16px;
     display: flex;
     align-items: center;
     gap: 12px;
