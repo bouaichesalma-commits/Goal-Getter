@@ -112,4 +112,6 @@ class AuthController extends Controller
             return response()->json(['error' => 'Failed to update user'], 500);
         }
     }
+
+    
 }

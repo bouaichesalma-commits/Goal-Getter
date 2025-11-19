@@ -169,9 +169,9 @@ class TaskController extends Controller
             $tasks = $query->paginate(4);
 
             return response()->json([
-                
+
                 'tasks' => $tasks
-                
+
             ]);
         } catch (\Exception $e) {
             return response()->json([
@@ -180,5 +180,161 @@ class TaskController extends Controller
                 'error' => $e->getMessage()
             ], 500);
         }
+    }
+
+
+
+
+
+    /********************************************API Functions************************************* */
+
+
+    public function indexApi()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+        $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
+
+        return response()->json(['tasks' => $tasks]);
+    }
+
+    public function storeApi(Request $request)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+
+            $request->validate([
+                'title' => 'required|string|max:255',
+                'description' => 'nullable|string',
+                'is_completed' => 'nullable|boolean',
+                'priority' => 'nullable|in:low,medium,high',
+            ]);
+
+            $task = new Task();
+            $task->title = $request->title;
+            $task->description = $request->description;
+            $task->is_completed = $request->is_completed;
+            $task->priority = $request->priority; // Add priority with default
+            $task->user_id = $user->id;
+            $task->save();
+
+            // $tasks = Task::where('user_id', $user->id)->get();
+            return response()->json([
+                'success' => true,
+                'message' => 'Task created successfully',
+                'task' => $task
+            ], 201);
+        } catch (Exception $e) {
+
+            Log::error('Error creating task: ' . $e->getMessage());
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
+
+
+    // PUT/PATCH /api/tasks/{task}
+    public function updateApi(Request $request, Task $task)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+
+            if ($task->user_id !== $user->id) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $request->validate([
+                'title' => 'sometimes|required|string|max:255',
+                'description' => 'nullable|string',
+                'is_completed' => 'nullable|boolean',
+                'priority' => 'nullable|in:low,medium,high',
+            ]);
+
+            $task->title = $request->title;
+            $task->description = $request->input('description', $task->description);
+            if ($request->has('is_completed')) {
+                $task->is_completed = $request->input('is_completed');
+            }
+            if ($request->has('priority')) {
+                $task->priority = $request->input('priority', $task->priority);
+            }
+            $task->save();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Task updated successfully',
+                'task' => $task
+            ], 200);
+        } catch (Exception $e) {
+            Log::error('Error updating task: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not update task'], 500);
+        }
+    }
+
+
+    // DELETE /api/tasks/{task}
+    public function destroyApi(Task $task)
+    {
+        try {
+            $user = JWTAuth::parseToken()->authenticate();
+
+            if ($task->user_id !== $user->id) {
+                return response()->json(['error' => 'Unauthorized'], 403);
+            }
+
+            $task->delete();
+
+            return response()->json(['success' => true, 'message' => 'Task deleted successfully'], 200);
+        } catch (Exception $e) {
+            Log::error('Error deleting task: ' . $e->getMessage());
+            return response()->json(['error' => 'Could not delete task'], 500);
+        }
+    }
+
+    // GET /api/tasks/pending
+    public function pendingApi()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+
+        $tasks = Task::where('user_id', $user->id)
+            ->where('is_completed', false)
+            ->orderBy('created_at', 'desc');
+
+        return response()->json(['tasks' => $tasks], 200);
+    }
+
+    // GET /api/tasks/completed
+    public function completedApi()
+    {
+        $user = JWTAuth::parseToken()->authenticate();
+
+        $tasks = Task::where('user_id', $user->id)
+            ->where('is_completed', true)
+            ->orderBy('created_at', 'desc');
+
+        return response()->json(['tasks' => $tasks], 200);
+    }
+
+    // POST /api/tasks/{id}/toggle
+    public function toggleApi($id)
+    {
+        // try {
+        //     $user = JWTAuth::parseToken()->authenticate();
+
+        //     $task = Task::where('id', $id)
+        //         ->where('user_id', $user->id)
+        //         ->firstOrFail();
+
+        //     $task->is_completed = !$task->is_completed;
+        //     $task->save();
+
+        //     return response()->json([
+        //         'success' => true,
+        //         'is_completed' => $task->is_completed,
+        //         'task' => $task
+        //     ], 200);
+        // } catch (Exception $e) {
+        //     Log::error('Error toggling task: ' . $e->getMessage());
+        //     return response()->json(['error' => 'Could not toggle task'], 500);
+        // }
     }
 }
