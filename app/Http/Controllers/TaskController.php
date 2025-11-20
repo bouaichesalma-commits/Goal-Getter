@@ -282,15 +282,19 @@ class TaskController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
-            $task->delete();
+            $task->delete(); // soft delete
 
-            return response()->json(['success' => true, 'message' => 'Task deleted successfully'], 200);
+            return response()->json([
+                'success' => true, 
+                'message' => 'Task deleted successfully'],
+                200);
         } catch (Exception $e) {
             Log::error('Error deleting task: ' . $e->getMessage());
             return response()->json(['error' => 'Could not delete task'], 500);
         }
     }
 
+    
     // GET /api/tasks/pending
     public function pendingApi()
     {
