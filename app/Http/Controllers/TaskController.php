@@ -147,7 +147,7 @@ class TaskController extends Controller
             $filter = $validated['filter'] ?? 'all';
             $query = Task::query();
 
-            // Apply filters (same switch case as above)
+           
             switch ($filter) {
                 case 'today':
                     $query->whereDate('created_at', today());
