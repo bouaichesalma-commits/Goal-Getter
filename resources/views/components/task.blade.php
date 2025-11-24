@@ -57,7 +57,7 @@
       <div>
          {{ $tasks->links() }}
       </div>
-        
+
         <a href="{{route('tasks.create')}}">
             <div class="add-new-placeholder" role="button" tabindex="0" aria-label="Add new task">
                 <i class="fa-solid fa-plus"></i>
