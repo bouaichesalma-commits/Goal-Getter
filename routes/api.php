@@ -31,6 +31,8 @@ Route::prefix('Tasks')->group(function () {
 
       Route::get('/', 'indexApi');
 
+      Route::get('/{id}', 'getTaskApi');
+
       Route::post('/add', 'storeApi');
 
       Route::put('/update/{task}', 'updateApi');

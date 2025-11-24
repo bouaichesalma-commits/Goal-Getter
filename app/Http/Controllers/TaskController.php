@@ -198,6 +198,23 @@ class TaskController extends Controller
         return response()->json(['Tasks' => $tasks, 'user' => $user], 200);
     }
 
+    //get task by id
+    public function getTaskApi($id)
+    {
+
+        $user = JWTAuth::parseToken()->authenticate();
+        
+        $task = Task::where('user_id', $user->id)
+            ->where('id', $id)
+            ->first();
+
+        if (!$task) {
+            return response()->json(['error' => 'Task not found'], 404);
+        }
+
+        return response()->json(['Tasks' => $task, 'user' => $user], 200);
+        
+    }
     public function storeApi(Request $request)
     {
         try {
@@ -243,6 +260,10 @@ class TaskController extends Controller
                 return response()->json(['error' => 'Unauthorized'], 403);
             }
 
+            // if (!$task->exists()) {
+            //     return response()->json(['error' => 'Task not found'], 404);
+            // }
+
             $request->validate([
                 'title' => 'sometimes|required|string|max:255',
                 'description' => 'nullable|string',
@@ -284,17 +305,20 @@ class TaskController extends Controller
 
             $task->delete(); // soft delete
 
-            return response()->json([
-                'success' => true, 
-                'message' => 'Task deleted successfully'],
-                200);
+            return response()->json(
+                [
+                    'success' => true,
+                    'message' => 'Task deleted successfully'
+                ],
+                200
+            );
         } catch (Exception $e) {
             Log::error('Error deleting task: ' . $e->getMessage());
             return response()->json(['error' => 'Could not delete task'], 500);
         }
     }
 
-    
+
     // GET /api/tasks/pending
     public function pendingApi()
     {
@@ -338,7 +362,7 @@ class TaskController extends Controller
             ]);
 
             $filter = $validated['filter'] ?? 'all';
-            $query = Task::query()->where('user_id',$user->id);
+            $query = Task::query()->where('user_id', $user->id);
 
             // Apply filters (same switch case as above)
             switch ($filter) {
@@ -365,8 +389,8 @@ class TaskController extends Controller
 
             return response()->json([
                 'filter' => $filter,
-                'tasks' => $tasks 
-    
+                'tasks' => $tasks
+
 
             ]);
         } catch (\Exception $e) {
