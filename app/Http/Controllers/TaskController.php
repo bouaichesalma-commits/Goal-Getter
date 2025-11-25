@@ -13,8 +13,13 @@ class TaskController extends Controller
 {
     public function index()
     {
+
+       //  $user = auth('api')->user();    the same result with | JWTAuth::parseToken()->authenticate();
         $user = JWTAuth::parseToken()->authenticate();
+
         $tasks = Task::where('user_id', $user->id)->orderBy('created_at', 'desc')->paginate(4);
+
+       // $tasks = $user::all ;
 
         return view('tasks.index', ['tasks' => $tasks]);
     }
@@ -191,6 +196,8 @@ class TaskController extends Controller
 
     public function indexApi()
     {
+
+        // $user = auth('api')->user();
         $user = JWTAuth::parseToken()->authenticate();
         $tasks = Task::where('user_id', $user->id)->get();
 

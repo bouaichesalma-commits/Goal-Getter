@@ -14,16 +14,12 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // Register your custom JWT middleware
+       
         $middleware->alias([
          
             'jwt' => \App\Http\Middleware\JwtMiddleware::class, // Shorter alias
         ]);
         
-        // Also register the package middleware if needed
-        // $middleware->alias([
-        //     'jwt.package' => \PHPOpenSourceSaver\JWTAuth\Http\Middleware\Authenticate::class,
-        // ]);
     })
     ->withExceptions(Function (Exceptions $exceptions):void {
         //

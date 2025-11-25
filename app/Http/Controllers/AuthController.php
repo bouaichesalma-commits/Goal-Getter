@@ -50,21 +50,13 @@ class AuthController extends Controller
             return response()->json(['error' => 'Could not create token'], 500);
         }
 
-        $user = JWTAuth::user();
+            $user = JWTAuth::user();
 
         // Set token cookie (HttpOnly, SameSite=Lax for localhost)
         $time = 60 * 60 * 5;
-        Cookie::queue(Cookie::forever(
-            'token',
-            $token,
-            $time,
-            '/',
-            null,
-            false,
-            true,
-            false,
-            'Lax'
-        ));
+
+
+  
 
         return response()->json(['user' => $user, 'token' => $token])->withCookie('token', $token, $time, '/', null, false, true, false, 'Lax');
     }
